@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Manager - Sistema de Gerenciamento de Basquete</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, #1D428A, #006BB6);
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo svg {
+            width: 40px;
+            height: 40px;
+            color: #F7931E;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .logo p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: #F7931E;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4)),
+                url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXNrZXRiYWxsJTIwYXJlbmF8ZW58MXx8fHwxNzYyOTc3MDYzfDA&ixlib=rb-4.1.0&q=80&w=1080');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-box {
+            padding: 20px 30px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+
+        .stat-box.orange {
+            background: #F7931E;
+        }
+
+        .stat-box.red {
+            background: #C8102E;
+        }
+
+        .stat-box.blue {
+            background: #1D428A;
+        }
+
+        .stat-box .number {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-box .label {
+            font-size: 14px;
+        }
+
+        /* Section Titles */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section.gray {
+            background: #f8f9fa;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            color: #1D428A;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Grid Layouts */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        /* Player Cards */
+        .player-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Team card styling - match player-card visual style */
+        .team-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-header {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .team-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .team-name {
+            position: absolute;
+            left: 16px;
+            bottom: 12px;
+            color: white;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .team-name h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .team-name p {
+            margin: 0;
+            font-size: 13px;
+            opacity: 0.95
+        }
+
+        .team-body {
+            padding: 16px;
+        }
+
+        .team-record {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .record-box {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            background: #f6f7fb;
+        }
+
+        .record-box .number {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .record-box .label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .record-box.wins {
+            background: linear-gradient(135deg, #DCFCE7, #BBF7D0);
+            color: #065F46
+        }
+
+        .record-box.losses {
+            background: #fff0f0;
+            color: #9F1239
+        }
+
+        .team-stats .team-stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-top: 1px solid #f1f1f5
+        }
+
+        /* Arena card styling - similar visual treatment */
+        .arena-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .arena-image {
+            position: relative;
+            height: 180px;
+            overflow: hidden
+        }
+
+        .arena-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            /* Sobrescreve tamanho global para arenas - ajuste aqui */
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .arena-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.35));
+        }
+
+        .arena-title {
+            position: absolute;
+            left: 16px;
+            bottom: 12px;
+            color: white;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6)
+        }
+
+        .arena-title h3 {
+            margin: 0;
+            font-size: 20px
+        }
+
+        .arena-body {
+            padding: 16px
+        }
+
+        .arena-stats-grid {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px
+        }
+
+        .arena-stat-box {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center
+        }
+
+        .arena-stat-box.orange {
+            background: linear-gradient(135deg, #F7931E, #FDBA74);
+            color: white
+        }
+
+        .arena-stat-box.blue {
+            background: linear-gradient(135deg, #1D428A, #4F7BCB);
+            color: white
+        }
+
+        /* Fixed photo size for all site images */
+        .player-image img,
+        .team-header img,
+        .player-card img,
+        .team-card img,
+        .arena-card img {
+            width: 280px;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+        .arena-image { 
+             width: 600px;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .arena-teams .title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .arena-teams .teams {
+            font-weight: 600;
+            color: #1D428A;
+            font-size: 16px;
+        }
+
+        /* Games Section */
+        .games-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .games-group {
+            margin-bottom: 60px;
+        }
+
+        .games-group-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .games-group-header h3 {
+            font-size: 28px;
+            color: #1D428A;
+            font-weight: 600;
+        }
+
+        .game-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .game-card:hover {
+            border-color: #F7931E;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-card.scheduled {
+            background: linear-gradient(to right, rgba(29, 66, 138, 0.05), rgba(0, 107, 182, 0.05));
+            border-color: rgba(0, 107, 182, 0.2);
+        }
+
+        .game-card.scheduled:hover {
+            border-color: #006BB6;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .game-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .game-status {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .game-status.finished {
+            background: #d1f4e0;
+            color: #059669;
+        }
+
+        .game-status.scheduled {
+            background: #006BB6;
+            color: white;
+        }
+
+        .game-matchup {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .game-team {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .team-name-game {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .team-name-game.winner {
+            color: #1D428A;
+            font-weight: 600;
+        }
+
+        .team-name-game.loser {
+            color: #999;
+        }
+
+        .team-score {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .team-score.winner {
+            color: #1D428A;
+        }
+
+        .team-score.loser {
+            color: #ccc;
+        }
+
+        .vs-text {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(to right, #1D428A, #006BB6);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section p {
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #F7931E;
+        }
+
+        .footer-contact li {
+            margin-bottom: 10px;
+            opacity: 0.85;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 30px;
+            text-align: center;
+            opacity: 0.75;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+            }
+
+            .section-header h2 {
+                font-size: 28px;
+            }
+
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .game-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Icons usando SVG inline */
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .icon-lg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .icon-orange {
+            color: #F7931E;
+        }
+
+        .icon-red {
+            color: #C8102E;
+        }
+
+        .icon-blue {
+            color: #006BB6;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" />
+                    </svg>
+                    <div>
+                        <h1>Basketball Manager</h1>
+                        <p>Sistema de Gerenciamento de Basquete (Gustavo Silveira 5 info)</p>
+                    </div>
+                </div>
+                <nav>
+                    <a href="#jogadores">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Jogadores
+                    </a>
+                    <a href="#times">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Times
+                    </a>
+                    <a href="#arenas">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        Arenas
+                    </a>
+                    <a href="#jogos">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Jogos
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Sistema de Gerenciamento de Basquete</h1>
+                <p>Acompanhe jogadores, times, arenas e resultados de jogos em um só lugar</p>
+                <div class="hero-stats">
+                    <div class="stat-box orange">
+                        <div class="number">
+                            <%= typeof jogadores !=='undefined' ? jogadores.length : 0 %>
+                        </div>
+                        <div class="label">Jogadores</div>
+                    </div>
+                    <div class="stat-box red">
+                        <div class="number">
+                            <%= typeof times !=='undefined' ? times.length : 0 %>
+                        </div>
+                        <div class="label">Times</div>
+                    </div>
+                    <div class="stat-box blue">
+                        <div class="number">
+                            <%= typeof arenas !=='undefined' ? arenas.length : 0 %>
+                        </div>
+                        <div class="label">Arenas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Players Section -->
+    <section id="jogadores" class="section gray">
+        <div class="container">
+            <div class="section-header">
+                <h2>Jogadores em Destaque</h2>
+                <p>Os melhores atletas da temporada</p>
+            </div>
+
+            <div class="grid-3">
+                <% if (typeof jogadores !=='undefined' && jogadores.length) { %>
+                    <% jogadores.forEach(function(j) { %>
+                        <div class="player-card">
+                            <div class="player-image">
+                                <img src="<%= j.foto ? j.foto : 'https://images.unsplash.com/photo-1585071258252-369a36d89e30?auto=format&fit=crop&w=1080&q=80' %>"
+                                    alt="<%= j.nome %>">
+                                <div class="player-number">
+                                    <%= j.camisa ? ('#' + j.camisa) : '' %>
+                                </div>
+                            </div>
+                            <div class="player-info">
+                                <h3>
+                                    <%= j.nome %>
+                                </h3>
+                                <p class="player-meta">
+                                    <%= j.posicao ? j.posicao : '' %> • <%= j.time ? j.time : '' %>
+                                </p>
+                                <div class="stat-item">
+                                    <span class="stat-label">🎯 Pontos</span>
+                                    <span class="stat-value">
+                                        <%= j.pontos !=null ? j.pontos : '-' %>
+                                    </span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">📈 Assistências</span>
+                                    <span class="stat-value">
+                                        <%= j.assistencias !=null ? j.assistencias : '-' %>
+                                    </span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">🏆 Rebotes</span>
+                                    <span class="stat-value">
+                                        <%= j.rebotes !=null ? j.rebotes : '-' %>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <p>Nenhum jogador cadastrado.</p>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teams Section -->
+    <section id="times" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Times da Liga</h2>
+                <p>Acompanhe o desempenho de cada equipe</p>
+            </div>
+
+            <div class="grid-4">
+                <% if (typeof times !=='undefined' && times.length) { %>
+                    <% times.forEach(function(t){ %>
+                        <div class="team-card">
+                            <div class="team-header"
+                                style="background: linear-gradient(135deg, #1D428A 0%, #1D428ACC 100%);">
+                                <img src="<%= t.foto ? t.foto : 'https://images.unsplash.com/photo-1521830101529-057b1dfd9784?auto=format&fit=crop&w=1080&q=80' %>"
+                                    alt="<%= t.nome %>">
+                                <div class="team-name">
+                                    <h3>
+                                        <%= t.nome %>
+                                    </h3>
+                                    <p>
+                                        <%= t.cidade ? t.cidade : '' %>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="team-body">
+                                <div class="team-record">
+                                    <div class="record-box wins">
+                                        <div class="number">
+                                            <%= t.vitorias !=null ? t.vitorias : '-' %>
+                                        </div>
+                                        <div class="label">Vitórias</div>
+                                    </div>
+                                    <div class="record-box losses">
+                                        <div class="number">
+                                            <%= t.derrotas !=null ? t.derrotas : '-' %>
+                                        </div>
+                                        <div class="label">Derrotas</div>
+                                    </div>
+                                </div>
+                                <div class="team-stats">
+                                    <div class="team-stat-row">
+                                        <span class="team-stat-label">👥 Jogadores</span>
+                                        <span class="team-stat-value">
+                                            <%= t.jogadores ? t.jogadores : '-' %>
+                                        </span>
+                                    </div>
+                                    <div class="team-stat-row">
+                                        <span class="team-stat-label">🏆 Títulos</span>
+                                        <span class="team-stat-value" style="color: #F7931E;">
+                                            <%= t.titulos !=null ? t.titulos : '-' %>
+                                        </span>
+                                    </div>
+                                    <div class="team-stat-row">
+                                        <span class="team-stat-label">📈 Win Rate</span>
+                                        <span class="team-stat-value" style="color: #059669;">
+                                            <%= t.winRate !=null ? t.winRate + '%' : '-' %>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <p>Nenhum time cadastrado.</p>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Arenas Section -->
+    <section id="arenas" class="section gray">
+        <div class="container">
+            <div class="section-header">
+                <h2>Arenas</h2>
+                <p>As principais arenas da liga</p>
+            </div>
+
+            <div class="grid-3">
+                <% if (typeof arenas !=='undefined' && arenas.length) { %>
+                    <% arenas.forEach(function(a){ %>
+                        <div class="arena-card">
+                            <div class="arena-image">
+                                <img src="<%= a.foto ? a.foto : 'https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&w=1080&q=80' %>"
+                                    alt="<%= a.nome %>">
+                                <div class="arena-overlay"></div>
+                                <div class="arena-title">
+                                    <h3>
+                                        <%= a.nome %>
+                                    </h3>
+                                    <% if (a.timeDaCasa) { %>
+                                        <p>🏠 <%= a.timeDaCasa %>
+                                        </p>
+                                        <% } else if (a.times) { %>
+                                            <p>🏠 <%= a.times %>
+                                            </p>
+                                            <% } else if (a.equipes) { %>
+                                                <p>🏠 <%= a.equipes %>
+                                                </p>
+                                                <% } %>
+                                </div>
+                            </div>
+                            <div class="arena-body">
+                                <div class="arena-stats-grid">
+                                    <div class="arena-stat-box orange">
+                                        <div class="number">
+                                            <%= a.capacidade !=null ? a.capacidade : '-' %>
+                                        </div>
+                                        <div class="label">Capacidade</div>
+                                    </div>
+                                    <div class="arena-stat-box blue">
+                                        <div class="number">
+                                            <%= a.anoInauguracao !=null ? a.anoInauguracao : '-' %>
+                                        </div>
+                                        <div class="label">Inauguração</div>
+                                    </div>
+                                </div>
+                                <div class="arena-teams">
+                                    <div class="title">🏆 Time da Casa</div>
+                                    <div class="teams">
+                                        <%= a.timeDaCasa ? a.timeDaCasa : (a.times ? a.times : (a.equipes ? a.equipes
+                                            : '-' )) %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <p>Nenhuma arena cadastrada.</p>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="jogos" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Jogos e Resultados</h2>
+                <p>Acompanhe os resultados e próximos jogos(professor disse para fazer depois)</p>
+            </div>
+
+            <div class="games-container">
+                <!-- Recent Games -->
+                <div class="games-group">
+                    <div class="games-group-header">
+                        <h3>🏆 Resultados Recentes</h3>
+                    </div>
+
+                    <!-- Game 1 -->
+                    <div class="game-card">
+                        <div class="game-header">
+                            <div class="game-meta">
+                                <div class="game-meta-item">📅 15 Nov 2025</div>
+                                <div class="game-meta-item">🕐 19:30</div>
+                                <div class="game-meta-item">📍 Staples Center</div>
+                            </div>
+                            <div class="game-status finished">Finalizado</div>
+                        </div>
+                        <div class="game-matchup">
+                            <div class="game-team">
+                                <span class="team-name-game winner">Lakers</span>
+                                <span class="team-score winner">112</span>
+                            </div>
+                            <div class="game-team">
+                                <span class="team-name-game loser">Warriors</span>
+                                <span class="team-score loser">108</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Game 2 -->
+                    <div class="game-card">
+                        <div class="game-header">
+                            <div class="game-meta">
+                                <div class="game-meta-item">📅 15 Nov 2025</div>
+                                <div class="game-meta-item">🕐 20:00</div>
+                                <div class="game-meta-item">📍 TD Garden</div>
+                            </div>
+                            <div class="game-status finished">Finalizado</div>
+                        </div>
+                        <div class="game-matchup">
+                            <div class="game-team">
+                                <span class="team-name-game winner">Celtics</span>
+                                <span class="team-score winner">98</span>
+                            </div>
+                            <div class="game-team">
+                                <span class="team-name-game loser">Heat</span>
+                                <span class="team-score loser">95</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Game 3 -->
+                    <div class="game-card">
+                        <div class="game-header">
+                            <div class="game-meta">
+                                <div class="game-meta-item">📅 16 Nov 2025</div>
+                                <div class="game-meta-item">🕐 18:00</div>
+                                <div class="game-meta-item">📍 United Center</div>
+                            </div>
+                            <div class="game-status finished">Finalizado</div>
+                        </div>
+                        <div class="game-matchup">
+                            <div class="game-team">
+                                <span class="team-name-game loser">Bulls</span>
+                                <span class="team-score loser">105</span>
+                            </div>
+                            <div class="game-team">
+                                <span class="team-name-game winner">Nets</span>
+                                <span class="team-score winner">110</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Games -->
+                <div class="games-group">
+                    <div class="games-group-header">
+                        <h3>📅 Próximos Jogos</h3>
+                    </div>
+
+                    <!-- Game 4 -->
+                    <div class="game-card scheduled">
+                        <div class="game-header">
+                            <div class="game-meta">
+                                <div class="game-meta-item">📅 16 Nov 2025</div>
+                                <div class="game-meta-item">🕐 21:00</div>
+                                <div class="game-meta-item">📍 American Airlines Center</div>
+                            </div>
+                            <div class="game-status scheduled">Agendado</div>
+                        </div>
+                        <div class="game-matchup">
+                            <div class="game-team">
+                                <span class="team-name-game" style="color: #1D428A;">Mavericks</span>
+                            </div>
+                            <div class="vs-text">vs</div>
+                            <div class="game-team">
+                                <span class="team-name-game" style="color: #1D428A;">Suns</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Game 5 -->
+                    <div class="game-card scheduled">
+                        <div class="game-header">
+                            <div class="game-meta">
+                                <div class="game-meta-item">📅 17 Nov 2025</div>
+                                <div class="game-meta-item">🕐 19:00</div>
+                                <div class="game-meta-item">📍 Chase Center</div>
+                            </div>
+                            <div class="game-status scheduled">Agendado</div>
+                        </div>
+                        <div class="game-matchup">
+                            <div class="game-team">
+                                <span class="team-name-game" style="color: #1D428A;">Warriors</span>
+                            </div>
+                            <div class="vs-text">vs</div>
+                            <div class="game-team">
+                                <span class="team-name-game" style="color: #1D428A;">Lakers</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Game 6 -->
+                    <div class="game-card scheduled">
+                        <div class="game-header">
+                            <div class="game-meta">
+                                <div class="game-meta-item">📅 17 Nov 2025</div>
+                                <div class="game-meta-item">🕐 20:30</div>
+                                <div class="game-meta-item">📍 FTX Arena</div>
+                            </div>
+                            <div class="game-status scheduled">Agendado</div>
+                        </div>
+                        <div class="game-matchup">
+                            <div class="game-team">
+                                <span class="team-name-game" style="color: #1D428A;">Heat</span>
+                            </div>
+                            <div class="vs-text">vs</div>
+                            <div class="game-team">
+                                <span class="team-name-game" style="color: #1D428A;">Celtics</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <svg style="width: 32px; height: 32px; color: #F7931E;" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" />
+                        </svg>
+                        <h3>Basketball Manager</h3>
+                    </div>
+                    <p>Sistema completo de gerenciamento para ligas de basquete profissional.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Navegação</h4>
+                    <ul class="footer-links">
+                        <li><a href="#jogadores">Jogadores</a></li>
+                        <li><a href="#times">Times</a></li>
+                        <li><a href="#arenas">Arenas</a></li>
+                        <li><a href="#jogos">Jogos</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Informações</h4>
+                    <ul class="footer-links">
+                        <li>Temporada 2025-2026</li>
+                        <li>82 Jogos Regulares</li>
+                        <li>Playoffs em Abril</li>
+                        <li>Finals em Junho</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contato</h4>
+                    <ul class="footer-contact">
+                        <li>✉️ contato@basketballmanager.com</li>
+                        <li>📞 +1 (555) 123-4567</li>
+                        <li>📍 New York, NY 10001</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025 Basketball Manager. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

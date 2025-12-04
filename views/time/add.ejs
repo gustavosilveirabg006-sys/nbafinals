@@ -1,0 +1,46 @@
+     <%-include('../cabecalho.ejs')%>
+     <header>
+        <h3>Adicionar Novo Time</h3>
+      </header>
+      <div class="content">
+        <form id="form-time" method="post" 
+        enctype="multipart/form-data"
+         autocomplete="off" action="/time/add/ok">
+          <div class="grid">
+            <div>
+              <label for="foto">Foto do Time</label>
+              <input id="foto" name="foto" type="file" >
+            </div>
+            <div>
+              <label for="nome">Nome do Time</label>
+              <input id="nome" name="nome" type="text" placeholder="Ex: Los Angeles Lakers" required>
+            </div>
+            <div>
+              <label for="vitorias">Vitórias</label>
+              <input id="vitorias" name="vitorias" type="number" placeholder="Ex: 45" min="0" step="1" required>
+            </div>
+            <div>
+              <label for="derrotas">Derrotas</label>
+              <input id="derrotas" name="derrotas" type="number" placeholder="Ex: 37" min="0" step="1" required>
+            </div>
+            <div>
+              <label for="jogadores">Número de Jogadores</label>
+              <input id="jogadores" name="jogadores" type="text" placeholder="Ex: 15" required>
+            </div>
+            <div>
+              <label for="titulos">Títulos</label>
+              <input id="titulos" name="titulos" type="number" placeholder="Ex: 17" min="0" step="1" required>
+            </div>
+            <div>
+              <label for="winRate">Win Rate (%)</label>
+              <input id="winRate" name="winRate" type="number" placeholder="Ex: 54.88" min="0" max="100" step="0.01" required>
+            </div>
+           <div class="field-help">Os campos com * são obrigatórios.</div>
+          <footer>
+            <a type="button" class="btn ghost" id="btn-cancelar" href="/time/lst">Cancelar</a>
+            <button type="submit" class="btn primary">Adicionar Time</button>
+          </footer>
+        </form>
+      </div>
+
+      <%-include('../rodape.ejs')%>

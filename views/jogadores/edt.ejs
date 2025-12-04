@@ -1,0 +1,60 @@
+<%-include('../cabecalho.ejs')%>
+     <header>
+        <h3>Editar Jogador</h3>
+      </header>
+      <div class="content">
+        <form id="form-jogador" action="/jogadores/edt/<%= jogador.id %>" autocomplete="off" method="POST" enctype="multipart/form-data">
+          <div class="grid">
+            <div>
+              <label for="id">ID do Jogador</label>
+              <input id="id" name="id" type="text" value="<%=jogador.id%>" readonly required>
+            </div>
+             <div>
+              <label for="nome">Nome do Jogador</label>
+              <input id="nome" name="nome" type="text" placeholder="Ex:Lebron James" value="<%=jogador.nome%>" required>
+            </div>
+            <div>
+              <label for="posicao">Posição</label>
+              <select id="posicao" name="posicao" required>
+                <option value="" disabled selected>Selecione a posição</option>
+                <option value="PG" <%= jogador.posicao === 'PG' ? 'selected' : '' %>>PG</option>
+                <option value="SG" <%= jogador.posicao === 'SG' ? 'selected' : '' %>>SG</option>
+                <option value="SF" <%= jogador.posicao === 'SF' ? 'selected' : '' %>>SF</option>
+                <option value="PF" <%= jogador.posicao === 'PF' ? 'selected' : '' %>>PF</option>
+                <option value="C" <%= jogador.posicao === 'C' ? 'selected' : '' %>>C</option>
+              </select>
+            </div>
+            <div>
+              <label for="time">Time</label>
+              <input id="time" name="time" type="text" placeholder="Ex: Lakers" value="<%=jogador.time%>" required>
+            </div>
+            <div>
+              <label for="pontos">Média de Pontos</label>
+              <input id="pontos" name="pontos" type="number" placeholder="Ex: 25.5" min="0" step="0.01" value="<%=jogador.pontos%>" required>
+            </div>
+            <div>
+              <label for="assistencias">Média de Assistências</label>
+              <input id="assistencias" name="assistencias" type="number" placeholder="Ex: 7.8" min="0" step="0.01" value="<%=jogador.assistencias%>" required>
+            </div>
+            <div>
+              <label for="rebotes">Média de Rebotes</label>
+              <input id="rebotes" name="rebotes" type="number" placeholder="Ex: 10.2" min="0" step="0.01" value="<%=jogador.rebotes%>" required>
+            </div>
+            <div>
+              <label for="foto">Foto do Jogador</label>
+              <% if(jogador.foto) { %>
+                <div style="margin-bottom: 10px;">
+                  <img src="<%=jogador.foto%>" alt="Foto atual" style="max-width: 150px; max-height: 150px; border-radius: 8px;">
+                </div>
+              <% } %>
+              <input id="foto" name="foto" type="file" accept="image/*">
+            </div>
+          </div> <!-- fecha .grid -->
+          <footer>
+            <a type="button" class="btn ghost" id="btn-cancelar" href="/jogadores/lst">Cancelar</a>
+            <button type="submit" class="btn primary">Salvar</button>
+          </footer>
+        </form>
+      </div>
+
+      <%-include('../rodape.ejs')%>

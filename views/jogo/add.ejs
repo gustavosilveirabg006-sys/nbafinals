@@ -1,0 +1,61 @@
+     <%-include('../cabecalho.ejs')%>
+     <header>
+        <h3>Adicionar Novo Jogo</h3>
+      </header>
+      <div class="content">
+        <form id="form-time" method="post" autocomplete="off" action="/jogo/add/ok">
+          <div class="grid">
+            <div>
+              <label for="casa">Time da Casa</label>
+              <select id="casa" name="casa" required>
+                <option value="" disabled selected>Selecione o time da casa</option>
+                <option>Los Angeles Lakers</option>
+                <option>Boston Celtics</option>
+                <option>Miami Heat</option>
+                <option>Golden State Warriors</option>
+                <option>Denver Nuggets</option>
+              </select>
+            </div>
+            <div>
+              <label for="pontoscasa">Pontos da Casa</label>
+              <input id="pontoscasa" name="pontoscasa" type="number" placeholder="Ex: 100" min="0" step="1" required>
+            </div>
+            <div>
+              <label for="visitante">Time Visitante</label>
+              <select id="visitante" name="visitante" required>
+                <option value="" disabled selected>Selecione o time visitante</option>
+                <option>Los Angeles Lakers</option>
+                <option>Boston Celtics</option>
+                <option>Miami Heat</option>
+                <option>Golden State Warriors</option>
+                <option>Denver Nuggets</option>
+              </select>
+            </div>
+              <label for="pontosvisitante">Pontos do Visitante</label>
+              <input id="pontosvisitante" name="pontosvisitante" type="number" placeholder="Ex: 90" min="0" step="1" required>
+            </div>
+            <div>
+              <label for="data">Data</label>
+              <input id="data" name="data" type="date" required>
+            </div>
+             <div>
+              <label for="arena">Arena</label>
+              <select id="arena" name="arena" required>
+                <option value="" disabled selected>Selecione a arena</option>
+                <option>Staples Center</option>
+                <option>TD Garden</option>
+                <option>American Airlines Arena</option>
+                <option>Chase Center</option>
+                <option>Ball Arena</option>
+              </select>
+            </div>
+            
+           <div class="field-help">Os campos com * são obrigatórios.</div>
+          <footer>
+            <a type="button" class="btn ghost" id="btn-cancelar" href="/jogo/lst">Cancelar</a>
+            <button type="submit" class="btn primary">Adicionar Jogo</button>
+          </footer>
+        </form>
+      </div>
+
+      <%-include('../rodape.ejs')%>

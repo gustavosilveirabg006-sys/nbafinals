@@ -1,0 +1,49 @@
+<%-include('../cabecalho.ejs')%>
+     <header>
+        <h3>Editar Arena</h3>
+      </header>
+      <div class="content">
+        <form id="form-arena" action="/arena/edt/<%= arena.id %>" autocomplete="off" method="POST" enctype="multipart/form-data">
+          <div class="grid">
+            <div>
+              <label for="id">ID da Arena</label>
+              <input id="id" name="id" type="text" value="<%=arena.id%>" readonly required>
+            </div>
+             <div>
+              <label for="nome">Nome da Arena</label>
+              <input id="nome" name="nome" type="text" placeholder="Ex: Staples Center" value="<%=arena.nome%>" required>
+            </div>
+            <div>
+              <label for="cidade">Cidade</label>
+              <input id="cidade" name="cidade" type="text" placeholder="Ex: Los Angeles" value="<%=arena.cidade%>" required>
+            </div>
+            <div>
+              <label for="capacidade">Capacidade</label>
+              <input id="capacidade" name="capacidade" type="number" placeholder="Ex: 20000" min="0" step="1" value="<%=arena.capacidade%>" required>
+            </div>
+            <div>
+              <label for="anoInauguracao">Ano de Inauguração</label>
+              <input id="anoInauguracao" name="anoInauguracao" type="number" placeholder="Ex: 1999" min="1900" max="2100" step="1" value="<%=arena.anoInauguracao%>" required>
+            </div>
+            <div>
+              <label for="timeDaCasa">Nome do Time da Casa</label>
+              <input id="timeDaCasa" name="timeDaCasa" type="text" placeholder="Ex: Los Angeles Lakers" value="<%=arena.timeDaCasa%>" required>
+            </div>
+            <div>
+              <label for="foto">Foto da Arena</label>
+              <% if(arena.foto) { %>
+                <div style="margin-bottom: 10px;">
+                  <img src="<%=arena.foto%>" alt="Foto atual" style="max-width: 150px; max-height: 150px; border-radius: 8px;">
+                </div>
+              <% } %>
+              <input id="foto" name="foto" type="file" accept="image/*">
+            </div>
+          </div> <!-- fecha .grid -->
+          <footer>
+            <a type="button" class="btn ghost" id="btn-cancelar" href="/arena/lst">Cancelar</a>
+            <button type="submit" class="btn primary">Salvar</button>
+          </footer>
+        </form>
+      </div>
+
+      <%-include('../rodape.ejs')%>
