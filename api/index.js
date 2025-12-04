@@ -1,30 +1,37 @@
+import express from 'express';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
 import { createServer } from 'http';
-import express from 'express'
+
 const app = express();
-//Importar os modelos 
+
+app.use(express.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+
+// Caminho correto das views e public
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+// COLOCAR OS MODELS AQUI (colocar o caminho ../)
 import Jogador from '../models/Jogador.js';
 import Time from '../models/Time.js';
 import Arena from '../models/Arena.js';
 import Jogo from '../models/Jogo.js';
+
+
+//FIM MODELS
+
+// Servir arquivos estáticos
+//app.use(express.static(join(__dirname, '../public')));
+app.set('views', join(__dirname, '../views'));
+
+// Rotas
 import multer from 'multer';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-//Confiram se tem essa linha aqui também
-app.use(express.urlencoded({extended:true}))
-app.set('view engine', 'ejs')
-
-//Liberar acesso a pasta public
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-// Converte o caminho do arquivo atual
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-app.use(express.static(__dirname + '../public'))
-
-//rotas
+// COLOCAR AS ROTAS AQUI
 app.get('/', (req, res) => {
     res.render("index")
 })
@@ -63,17 +70,21 @@ app.get('/time/lst', async (req, res) => {
 
 
 app.post('/time/lst', async (req, res) => {
-    //busca as marcar no banco de dados
+    //busca as times no banco de dados
     const pesquisa = req.body.pesquisa
     const times = await Time.find({nome:{$regex:pesquisa, $options:'i'}})
-    res.render("time/lst", {times:times})
+    res.render("time/lst", {times:times, pesquisa:pesquisa})
 })
 
 app.post('/time/add/ok', upload.single('foto'), async (req, res) => {
     Time.create({
-        foto: req.file.buffer,
+        foto: req.file ? req.file.buffer : null,
         nome: req.body.nome,
-        cidade: req.body.cidade,
+        vitorias: req.body.vitorias,
+        derrotas: req.body.derrotas,
+        jogadores: req.body.jogadores,
+        titulos: req.body.titulos,
+        winRate: req.body.winRate
     });
     res.render("time/addok")
 })
@@ -82,8 +93,12 @@ app.get('/time/add', (req, res) => {
     res.render("time/add")
 })
 
-app.post('/time/add', async (req, res) => {
-  await Time.create(req.body);
+app.post('/time/add', upload.single('foto'), async (req, res) => {
+  const timeData = { ...req.body };
+  if (req.file) {
+    timeData.foto = req.file.buffer;
+  }
+  await Time.create(timeData);
   res.redirect('/time/lst');
 });
 
@@ -94,18 +109,19 @@ app.get('/arena/lst', async (req, res) => {
 
 
 app.post('/arena/lst', async (req, res) => {
-    //busca as marcar no banco de dados
+    //busca as arenas no banco de dados
     const pesquisa = req.body.pesquisa
     const arenas = await Arena.find({nome:{$regex:pesquisa, $options:'i'}})
-    res.render("arena/lst", {arenas:arenas})
+    res.render("arena/lst", {arenas:arenas, pesquisa:pesquisa})
 })
 
 app.post('/arena/add/ok', upload.single('foto'), async (req, res) => {
     Arena.create({
-        foto: req.file.buffer,
+        foto: req.file ? req.file.buffer : null,
         nome: req.body.nome,
         cidade: req.body.cidade,
-        endereco: req.body.endereco,
+        capacidade: req.body.capacidade,
+        anoInauguracao: req.body.anoInauguracao
     });
     res.render("arena/addok")
 })
@@ -114,8 +130,12 @@ app.get('/arena/add', (req, res) => {
     res.render("arena/add")
 })
 
-app.post('/arena/add', async (req, res) => {
-  await Arena.create(req.body);
+app.post('/arena/add', upload.single('foto'), async (req, res) => {
+  const arenaData = { ...req.body };
+  if (req.file) {
+    arenaData.foto = req.file.buffer;
+  }
+  await Arena.create(arenaData);
   res.redirect('/arena/lst');
 });
 
@@ -234,7 +254,23 @@ app.post('/jogadores/lst', async (req, res) => {
     res.render("jogadores/lst", {jogadores:jogadores, pesquisa:pesquisa})
 })
 
-app.get('/site', (req, res) => {
-    res.render("site/index")
+app.get('/site', async (req, res) => {
+    try {
+        const [jogadores, times, arenas, jogos] = await Promise.all([
+            Jogador.find(),
+            Time.find(),
+            Arena.find(),
+            Jogo.find()
+        ])
+        res.render('site/index', { jogadores, times, arenas, jogos })
+    } catch (err) {
+        console.error('Erro ao carregar dados para /site:', err)
+        res.status(500).send('Erro ao carregar dados')
+    }
 })
-app.listen(3000)
+
+
+//FIM ROTAS
+app.listen(3001)
+// Exporta o handler compatível com Vercel
+export default app;
